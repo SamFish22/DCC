@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIController">
+   <children>
+      <Button fx:id="loadFile" mnemonicParsing="false" onAction="#pressLoadFileButton" prefHeight="800.0" prefWidth="639.0" text="LOAD FILE">
+         <effect>
+            <ColorAdjust brightness="0.02" contrast="-0.1" hue="0.75" saturation="1.0" />
+         </effect>
+         <font>
+            <Font name="Arial Bold" size="37.0" />
+         </font>
+      </Button>
+      <Button fx:id="write" alignment="CENTER" layoutX="601.0" mnemonicParsing="false" onAction="#loadSecondScreen" prefHeight="800.0" prefWidth="645.0" text="WRITE" AnchorPane.rightAnchor="0.0">
+         <effect>
+            <ColorAdjust hue="0.08" saturation="1.0" />
+         </effect>
+         <font>
+            <Font name="Arial Bold" size="39.0" />
+         </font>
+      </Button>
+      <TextArea fx:id="typeHere" layoutX="20.0" layoutY="364.0" prefHeight="381.0" prefWidth="1245.0" promptText="Type here..." visible="false" />
+      <Button fx:id="check" layoutX="20.0" layoutY="743.0" mnemonicParsing="false" onAction="#pressCheckConsistency" prefHeight="42.0" prefWidth="1245.0" text="CHECK CONSISTENCY" visible="false" />
+      <Label fx:id="inconsistencyLabel" layoutX="103.0" layoutY="26.0" prefHeight="136.0" prefWidth="1022.0" text="Inconsistency: color vs colour" visible="false">
+         <font>
+            <Font size="72.0" />
+         </font>
+      </Label>
+      <Button fx:id="option1" layoutX="255.0" layoutY="228.0" mnemonicParsing="false" text="Color" visible="false">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Button>
+      <Button fx:id="option2" layoutX="556.0" layoutY="230.0" mnemonicParsing="false" text="Colour" visible="false">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Button>
+      <Button fx:id="ignore" layoutX="880.0" layoutY="228.0" mnemonicParsing="false" text="Ignore" visible="false">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Button>
+      <Label fx:id="changeTo" layoutX="116.0" layoutY="141.0" prefHeight="42.0" prefWidth="139.0" text="Change to:" visible="false">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
+      <MenuButton fx:id="file" layoutY="-1.0" mnemonicParsing="false" text="File" visible="false">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Save" />
+          <MenuItem mnemonicParsing="false" text="Save AS" />
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>
