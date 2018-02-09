@@ -37,17 +37,17 @@
             <Font size="72.0" />
          </font>
       </Label>
-      <Button fx:id="option1" layoutX="255.0" layoutY="228.0" mnemonicParsing="false" text="Option 1" visible="false">
+      <Button fx:id="option1" layoutX="255.0" layoutY="228.0" mnemonicParsing="false" onAction="#pressOption1" text="Option 1" visible="false">
          <font>
             <Font size="34.0" />
          </font>
       </Button>
-      <Button fx:id="option2" layoutX="556.0" layoutY="230.0" mnemonicParsing="false" text="Option 2" visible="false">
+      <Button fx:id="option2" layoutX="556.0" layoutY="230.0" mnemonicParsing="false" onAction="#pressOption2" text="Option 2" visible="false">
          <font>
             <Font size="34.0" />
          </font>
       </Button>
-      <Button fx:id="ignore" layoutX="880.0" layoutY="228.0" mnemonicParsing="false" text="Ignore" visible="false">
+      <Button fx:id="ignore" layoutX="880.0" layoutY="228.0" mnemonicParsing="false" onAction="#advanceInconsistencyList" text="Ignore" visible="false">
          <font>
             <Font size="34.0" />
          </font>
@@ -59,8 +59,8 @@
       </Label>
       <MenuButton fx:id="file" layoutY="-1.0" mnemonicParsing="false" text="File" visible="false">
         <items>
-          <MenuItem mnemonicParsing="false" text="Save" />
-          <MenuItem mnemonicParsing="false" text="Save As" />
+          <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
+          <MenuItem mnemonicParsing="false" onAction="#saveAs" text="Save As" />
             <MenuItem mnemonicParsing="false" onAction="#pressLoadFileButton" text="Load" />
         </items>
       </MenuButton>

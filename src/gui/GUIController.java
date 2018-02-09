@@ -5,6 +5,9 @@ import core.Checker;
 import core.Inconsistency;
 import core.WordEngine;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -35,6 +38,13 @@ public class GUIController {
 	
 	ArrayList<Inconsistency> inconsistenciesFound;
 	
+	String currentFilePath = null;
+	
+	Checker checkingEngine;
+	
+	boolean possessiveTurn = false;
+
+	
 	public void initilize() {
         option1.setVisible(false);
         option2.setVisible(false);
@@ -61,13 +71,15 @@ public class GUIController {
 		s.close();
 		typeHere.setText(wholeFile);
 		loadSecondScreen();
+		
+		currentFilePath = chooser.getSelectedFile().getAbsolutePath();
+
 	}
 	
 	public boolean acceptFile(File f) {
 	   String fileName = new String(f.getName());
 	   String stringList[] = fileName.split("\\.");
-	   ArrayList<String> acceptedExtention = new ArrayList<String>(Arrays.asList("doc", "docx", "odt", "pdf", "rtf", "tex", "txt", "wks", "wps", "wpd"));
-	   if(acceptedExtention.contains(stringList[stringList.length - 1])) {
+	   if(stringList[stringList.length - 1].equals("txt")) {
 	    	return true;
 	    } return false;
 	}
@@ -87,14 +99,47 @@ public class GUIController {
 	
 	public void pressCheckConsistency() {
 		String operatingText = typeHere.getText();
-		Checker checkingEngine = new Checker();
-		inconsistenciesFound = checkingEngine.checkText(operatingText);
-		//checker fills a list with options
-		//if list is empty display No Inconsistencies!
-		//inconsistencyList.SetText(..)
-		inconsistencyLabel.setVisible(true);
-		//if list isn't empty
-		//option1/2.setText(..)
+		checkingEngine = new Checker(operatingText);
+		inconsistenciesFound = checkingEngine.checkText();
+		
+		putPossessivesFirst(checkingEngine);
+
+		if(inconsistenciesFound.isEmpty()) {
+			inconsistencyLabel.setText("No Inconsistencies!");
+			inconsistencyLabel.setVisible(true);
+		} else {
+			inconsistencyLabel.setVisible(true);
+			goThroughInconsistencies();
+			loadScreenThree();
+		}
+	}
+	
+	public void putPossessivesFirst(Checker checking) {
+		Inconsistency possessive = checking.getPossessives();
+		if (possessive != null) {
+			inconsistenciesFound.add(0, possessive);
+			possessiveTurn = true;
+		}
+	}
+	
+	private void goThroughInconsistencies() {
+		if(inconsistenciesFound.isEmpty()) {
+			inconsistencyLabel.setText("No More Inconsistencies!");
+			checkingEngine.replaceTextwithList();
+			typeHere.setText(checkingEngine.getText());
+			option1.setVisible(false);
+			option2.setVisible(false);
+			ignore.setVisible(false);
+			changeTo.setVisible(false);
+		} else {
+			Inconsistency current = inconsistenciesFound.get(0);
+			inconsistencyLabel.setText("Inconsistency: " + current.getOption1() + " vs. " + current.getOption2());
+			option1.setText(current.getOption1());
+			option2.setText(current.getOption2());
+		}
+	}
+
+	public void loadScreenThree() {
 		changeTo.setVisible(true);
 		option1.setVisible(true);
 		option2.setVisible(true);
@@ -104,14 +149,62 @@ public class GUIController {
 	}
 	
 	public void advanceInconsistencyList() {	//assigned to Ignore button
-		//advance Inconsistency list
-		//display an All Done when list is at its end
+		inconsistenciesFound.remove(0);
+		possessiveTurn = false;
+
+		checkingEngine.replaceTextwithList();
+		typeHere.setText(checkingEngine.getText());
+		goThroughInconsistencies();
 	}
 	
-	public void pressOption(/*which option*/) {
-		//get options somehow for reference
-		//go into the array of arrays I've made for the document
-		//change each tagged that is the other option
-		//advance Inconsistency List
+	public void pressOption1() {
+		Inconsistency workingOn = inconsistenciesFound.get(0);
+		ArrayList<Integer> replaceLocations = workingOn.getOppositesLocation();
+		for (int each : replaceLocations) {	
+			if (possessiveTurn) {
+				checkingEngine.takeFromWord(each);
+			} else {
+				checkingEngine.setAndProcessWordInText(workingOn.getOption1(), workingOn.getOption2(), each);
+			}
+		}
+		advanceInconsistencyList();
+	}
+	
+	public void pressOption2() {
+		Inconsistency workingOn = inconsistenciesFound.get(0);
+		ArrayList<Integer> replaceLocations = workingOn.getWordNum();
+		for (int each : replaceLocations) {
+			if (possessiveTurn) {
+				checkingEngine.addToWord(each);
+			} else {
+				checkingEngine.setAndProcessWordInText(workingOn.getOption2(), workingOn.getOption1(), each);
+			}
+		}
+		advanceInconsistencyList();
+	}
+	
+	public void saveAs() {
+		JFileChooser chooser= new JFileChooser();
+		int choice = chooser.showSaveDialog(null);
+		if(choice == JFileChooser.APPROVE_OPTION) {
+			try(FileWriter fw = new FileWriter(chooser.getSelectedFile()+".txt")) {
+			    fw.write(typeHere.getText());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		currentFilePath = chooser.getSelectedFile().getAbsolutePath();
+	}
+	
+	public void save() {
+		if (currentFilePath != null) {
+			try {
+				Writer fileWriter = new FileWriter(currentFilePath);
+				fileWriter.write(typeHere.getText());
+				fileWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
